@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveNet - Find Your Perfect Match</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-heart"></i>
+                <span>LoveNet</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#search" class="nav-link">Search</a>
+                <a href="#success-stories" class="nav-link">Success Stories</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="nav-auth">
+                <button class="btn btn-outline" onclick="openModal('loginModal')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('registerModal')">Register</button>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Find Your Perfect Match</h1>
+                <p>Join thousands of singles who have found love on LoveNet. Start your journey to meaningful connections today.</p>
+                <button class="btn btn-primary btn-large" onclick="openModal('registerModal')">
+                    Get Started Free
+                </button>
+            </div>
+            <div class="hero-image">
+                <div class="hero-cards">
+                    <div class="profile-card hero-card-1">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=200&fit=crop&crop=face" alt="Profile">
+                        <div class="card-info">
+                            <h4>Sarah, 28</h4>
+                            <p>Adventure seeker</p>
+                        </div>
+                    </div>
+                    <div class="profile-card hero-card-2">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=200&fit=crop&crop=face" alt="Profile">
+                        <div class="card-info">
+                            <h4>Michael, 32</h4>
+                            <p>Music lover</p>
+                        </div>
+                    </div>
+                    <div class="profile-card hero-card-3">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=200&fit=crop&crop=face" alt="Profile">
+                        <div class="card-info">
+                            <h4>Emma, 26</h4>
+                            <p>Art enthusiast</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="search" class="search-section">
+        <div class="container">
+            <h2>Find Your Match</h2>
+            <div class="search-filters">
+                <div class="filter-group">
+                    <label for="age-range">Age Range</label>
+                    <div class="range-inputs">
+                        <input type="number" id="min-age" placeholder="18" min="18" max="100">
+                        <span>to</span>
+                        <input type="number" id="max-age" placeholder="35" min="18" max="100">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="gender">Looking for</label>
+                    <select id="gender">
+                        <option value="">All genders</option>
+                        <option value="female">Women</option>
+                        <option value="male">Men</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="Enter city or zip code">
+                </div>
+                <button class="btn btn-primary" onclick="searchProfiles()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Cards Section -->
+    <section class="profiles-section">
+        <div class="container">
+            <h2>Featured Profiles</h2>
+            <div class="profiles-grid" id="profilesGrid">
+                <!-- Profile cards will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories Section -->
+    <section id="success-stories" class="success-stories">
+        <div class="container">
+            <h2>Success Stories</h2>
+            <p class="section-subtitle">Real couples who found love on LoveNet</p>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&h=200&fit=crop" alt="Success Story">
+                    </div>
+                    <div class="story-content">
+                        <h3>Sarah & Michael</h3>
+                        <p class="story-date">Married 2 years ago</p>
+                        <p>"We matched on LoveNet in 2021 and instantly connected over our love for hiking. After our first date, we knew we had found something special. Thank you LoveNet for bringing us together!"</p>
+                        <div class="story-stats">
+                            <span><i class="fas fa-heart"></i> 2 years together</span>
+                            <span><i class="fas fa-map-marker-alt"></i> New York</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=200&fit=crop" alt="Success Story">
+                    </div>
+                    <div class="story-content">
+                        <h3>Emma & David</h3>
+                        <p class="story-date">Engaged 6 months ago</p>
+                        <p>"LoveNet's matching algorithm is incredible! We were both looking for someone who shared our passion for travel and adventure. Now we're planning our dream wedding!"</p>
+                        <div class="story-stats">
+                            <span><i class="fas fa-heart"></i> 1.5 years together</span>
+                            <span><i class="fas fa-map-marker-alt"></i> Los Angeles</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&h=200&fit=crop" alt="Success Story">
+                    </div>
+                    <div class="story-content">
+                        <h3>Jessica & Alex</h3>
+                        <p class="story-date">Dating for 1 year</p>
+                        <p>"I was skeptical about online dating until I met Alex on LoveNet. His profile caught my attention, and our first conversation lasted for hours. We're so grateful for this platform!"</p>
+                        <div class="story-stats">
+                            <span><i class="fas fa-heart"></i> 1 year together</span>
+                            <span><i class="fas fa-map-marker-alt"></i> Chicago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Welcome Back</h2>
+            <form class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            <p class="auth-footer">
+                Don't have an account? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Join LoveNet</h2>
+            <form class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerUsername">Username</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="registerGender">I am a</label>
+                    <select id="registerGender" required>
+                        <option value="">Select gender</option>
+                        <option value="male">Man</option>
+                        <option value="female">Woman</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="registerDob">Date of Birth</label>
+                    <input type="date" id="registerDob" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerBio">About Me (Optional)</label>
+                    <textarea id="registerBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+            <p class="auth-footer">
+                Already have an account? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LoveNet</h3>
+                    <p>Connecting hearts, one match at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#search">Search</a></li>
+                        <li><a href="#success-stories">Success Stories</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LoveNet. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
