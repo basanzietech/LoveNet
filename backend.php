@@ -6,6 +6,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, multipart/form-data');
 
 // Database configuration
 $host = 'localhost';
@@ -70,6 +71,40 @@ switch($method) {
 
 function handleRegistration($pdo, $data) {
     try {
+        // Handle image upload
+        $profilePicPath = null;
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = 'uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            $file = $_FILES['profile_pic'];
+            $fileName = time() . '_' . basename($file['name']);
+            $targetPath = $uploadDir . $fileName;
+            
+            // Validate file type
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!in_array($file['type'], $allowedTypes)) {
+                echo json_encode(['error' => 'Invalid file type. Only JPG, PNG, GIF, and WebP are allowed']);
+                return;
+            }
+            
+            // Validate file size (max 5MB)
+            if ($file['size'] > 5 * 1024 * 1024) {
+                echo json_encode(['error' => 'File size must be less than 5MB']);
+                return;
+            }
+            
+            // Move uploaded file
+            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                $profilePicPath = $targetPath;
+            } else {
+                echo json_encode(['error' => 'Failed to upload image']);
+                return;
+            }
+        }
+        
         // Validate required fields
         $required = ['username', 'email', 'password', 'gender', 'dob'];
         foreach ($required as $field) {
@@ -118,8 +153,8 @@ function handleRegistration($pdo, $data) {
         
         // Insert new user
         $stmt = $pdo->prepare("
-            INSERT INTO TBL_USERS (username, email, password, gender, dob, bio, status) 
-            VALUES (?, ?, ?, ?, ?, ?, 'active')
+            INSERT INTO TBL_USERS (username, email, password, gender, dob, bio, profile_pic, status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'active')
         ");
         
         $stmt->execute([
@@ -128,7 +163,8 @@ function handleRegistration($pdo, $data) {
             $hashedPassword,
             $data['gender'],
             $data['dob'],
-            $data['bio'] ?? ''
+            $data['bio'] ?? '',
+            $profilePicPath
         ]);
         
         $userId = $pdo->lastInsertId();

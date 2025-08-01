@@ -63,11 +63,13 @@ const API_BASE_URL = 'backend.php';
 function openModal(modalId) {
     document.getElementById(modalId).style.display = 'block';
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
 }
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
     document.body.style.overflow = 'auto';
+    document.body.classList.remove('modal-open');
 }
 
 function switchModal(fromModal, toModal) {
@@ -85,19 +87,106 @@ window.onclick = function(event) {
     });
 }
 
+// Mobile navigation toggle
+function toggleMobileMenu() {
+    console.log('Mobile menu toggle clicked');
+    const navMenu = document.querySelector('.nav-menu');
+    const navToggle = document.querySelector('.nav-toggle');
+    
+    if (navMenu && navToggle) {
+        navMenu.classList.toggle('active');
+        navToggle.classList.toggle('active');
+        console.log('Menu toggled:', navMenu.classList.contains('active'));
+    } else {
+        console.error('Navigation elements not found');
+    }
+}
+
+// Remove profile picture
+function removeProfilePic() {
+    const profilePicInput = document.getElementById('registerProfilePic');
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    
+    if (profilePicInput) {
+        profilePicInput.value = '';
+    }
+    if (profilePicPreview) {
+        profilePicPreview.innerHTML = '';
+    }
+}
+
+// Close mobile menu when clicking on a link
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navToggle = document.querySelector('.nav-toggle');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.remove('active');
+            navToggle.classList.remove('active');
+        });
+    });
+    
+    // Add click event to mobile toggle
+    if (navToggle) {
+        navToggle.addEventListener('click', toggleMobileMenu);
+    }
+    
+    // Add image upload functionality
+    const profilePicInput = document.getElementById('registerProfilePic');
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    
+    if (profilePicInput && profilePicPreview) {
+        profilePicInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    this.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePicPreview.innerHTML = `
+                        <img src="${e.target.result}" alt="Profile Preview">
+                        <br>
+                        <button type="button" class="remove-btn" onclick="removeProfilePic()">Remove</button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+
 // API Helper Functions
 async function apiCall(action, method = 'GET', data = null) {
     try {
         const url = `${API_BASE_URL}?action=${action}`;
         const options = {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            method: method
         };
         
         if (data && method === 'POST') {
-            options.body = JSON.stringify(data);
+            if (data instanceof FormData) {
+                // Don't set Content-Type for FormData (browser will set it with boundary)
+                options.body = data;
+            } else {
+                options.headers = {
+                    'Content-Type': 'application/json',
+                };
+                options.body = JSON.stringify(data);
+            }
         }
         
         const response = await fetch(url, options);
@@ -182,14 +271,22 @@ async function handleRegister(event) {
     }
     
     try {
-        const result = await apiCall('register', 'POST', {
-            username,
-            email,
-            password,
-            gender,
-            dob,
-            bio
-        });
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('gender', gender);
+        formData.append('dob', dob);
+        formData.append('bio', bio);
+        
+        // Add profile picture if selected
+        const profilePicInput = document.getElementById('registerProfilePic');
+        if (profilePicInput && profilePicInput.files[0]) {
+            formData.append('profile_pic', profilePicInput.files[0]);
+        }
+        
+        const result = await apiCall('register', 'POST', formData);
         
         if (result.success) {
             alert('Registration successful! Welcome to LoveNet! 🎉\n\nYour account has been created and you can now start connecting with other singles.');
@@ -202,6 +299,12 @@ async function handleRegister(event) {
             document.getElementById('registerGender').value = '';
             document.getElementById('registerDob').value = '';
             document.getElementById('registerBio').value = '';
+            
+            // Clear profile picture
+            const profilePicInput = document.getElementById('registerProfilePic');
+            const profilePicPreview = document.getElementById('profilePicPreview');
+            if (profilePicInput) profilePicInput.value = '';
+            if (profilePicPreview) profilePicPreview.innerHTML = '';
             
             // Store user data in localStorage
             localStorage.setItem('user', JSON.stringify({
@@ -552,11 +655,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Mobile navigation toggle
-document.querySelector('.nav-toggle').addEventListener('click', function() {
-    const navMenu = document.querySelector('.nav-menu');
-    navMenu.classList.toggle('active');
-});
+
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {

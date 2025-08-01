@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoveNet - Find Your Perfect Match</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=1.5">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -27,7 +27,7 @@
                 <button class="btn btn-outline" onclick="openModal('loginModal')">Login</button>
                 <button class="btn btn-primary" onclick="openModal('registerModal')">Register</button>
             </div>
-            <div class="nav-toggle">
+            <div class="nav-toggle" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -222,6 +222,11 @@
                     <input type="date" id="registerDob" required>
                 </div>
                 <div class="form-group">
+                    <label for="registerProfilePic">Profile Picture (Optional)</label>
+                    <input type="file" id="registerProfilePic" accept="image/*" class="file-input">
+                    <div class="file-preview" id="profilePicPreview"></div>
+                </div>
+                <div class="form-group">
                     <label for="registerBio">About Me (Optional)</label>
                     <textarea id="registerBio" rows="3" placeholder="Tell us about yourself..."></textarea>
                 </div>
@@ -232,6 +237,51 @@
             </p>
         </div>
     </div>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>About LoveNet</h2>
+            <p class="section-subtitle">Connecting hearts since 2024</p>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Mission</h3>
+                    <p>LoveNet is dedicated to helping singles find meaningful connections in a safe, respectful, and authentic environment. We believe that everyone deserves to find love and companionship.</p>
+                    
+                    <h3>What Makes Us Different</h3>
+                    <ul>
+                        <li><strong>Safety First:</strong> We prioritize user safety with advanced verification systems</li>
+                        <li><strong>Authentic Connections:</strong> Our matching algorithm focuses on compatibility</li>
+                        <li><strong>Community:</strong> Join thousands of singles who have found love</li>
+                        <li><strong>Support:</strong> 24/7 customer support to help you on your journey</li>
+                    </ul>
+                    
+                    <h3>Our Story</h3>
+                    <p>Founded in 2024, LoveNet was created by a team of relationship experts and technology enthusiasts who wanted to build a dating platform that truly puts people first. We understand that finding love is a journey, and we're here to support you every step of the way.</p>
+                </div>
+                
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <h4>10,000+</h4>
+                        <p>Active Users</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>500+</h4>
+                        <p>Success Stories</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>95%</h4>
+                        <p>Satisfaction Rate</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>24/7</h4>
+                        <p>Support Available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
